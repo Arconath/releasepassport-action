@@ -1,0 +1,29 @@
+name: ReleasePassport Vision QA
+description: Verify a preview, refresh testing authentication in your CI, and wait for scoped QA results.
+inputs:
+  project-id:
+    description: ReleasePassport project UUID.
+    required: true
+  deployment-id:
+    description: Successful GitHub deployment ID; provide exactly one of deployment-id or deployment-sha.
+  deployment-sha:
+    description: Upstream deployment commit SHA; the service resolves one eligible successful deployment in the configured environment.
+  preview-url:
+    description: Optional public HTTPS URL to cross-check against the GitHub deployment; the deployed page must carry the project ownership proof.
+  mission-ids:
+    description: Optional comma-separated approved mission UUIDs; defaults to active missions.
+  auth-setup-script:
+    description: Optional trusted-checkout .mjs file exporting default async function({page,baseURL}). Requires customer-installed Playwright.
+  auth-env:
+    description: Explicit RP_TEST_* environment variable names passed to the authentication script; values come from your CI secrets.
+  wait-timeout-seconds:
+    description: Maximum wait for terminal QA results, from 1 to 900 seconds.
+    default: '900'
+outputs:
+  status:
+    description: Passed only when every admitted mission passes.
+  run-ids:
+    description: Comma-separated admitted QA run IDs.
+runs:
+  using: node24
+  main: index.mjs
